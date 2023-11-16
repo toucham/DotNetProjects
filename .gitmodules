@@ -1,0 +1,3 @@
+[submodule "DICSharp"]
+	path = DICSharp
+	url = https://github.com/toucham/DICSharp
