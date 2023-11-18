@@ -474,4 +474,26 @@ $RECYCLE.BIN/
 *.msp
 
 # Windows shortcuts
-*.lnk
+.vs/
+.vscode/
+bin/
+obj/
+/*.user
+_Resharper*
+.hgtags
+NuGet.exe
+*.user
+*.nupkg
+.nupkgs/
+.docstats
+*.ide/
+*.lock.json
+*.coverage
+Test.DB.*
+TestResults/
+Dapper.Tests/*.sdf
+Dapper.Tests/SqlServerTypes/
+.dotnet/*
+BenchmarkDotNet.Artifacts/
+.idea/
+.DS_Store
