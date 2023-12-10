@@ -6,12 +6,16 @@ A docker containers to simulate requests from clients sending to an ASP.NET serv
 
 There are altogether two important components for testing the library:
 
-1. [Client](/sandbox/SandboxClient/)
-2. [Server](/sandbox/SandboxServer/)
+1. [Client](#client)
+2. [Server](#server)
 
 The startup configurations for both services are within `docker-compose.yml` and `Dockerfile` of each directory.
 
-Instead of spawning a database to simulate the entire system, the server will be storing all data in-memory.
+## Server
+
+The server is a simple ASP.NET web API server. It is for testing the other libaries in the same repository.
+
+Instead of creating another container for a database to simulate the entire system, the server will be storing all data in-memory.
 
 ## Client
 
@@ -64,7 +68,9 @@ The JSON file has the following structure:
 ### Options
 
 These are the following possible configurations that user can set:
-| Options     | Parameter     | Default |
-| ----------- | ------------- | ----------- |
-| Max # of parallel requests      | -t \<number>   | 4        |
-| Intervals between requests    | -i \<ms>          | 30ms        |
+| Options     | Parameter     |  Env Name | Default |
+| ----------- | ------------- | ------------ | ---------- |
+| Max # of parallel requests      | -t \<number>   |  `SB_PARALLEL_REQ`        |4        |
+| Intervals between requests    | -i \<ms>          | `SB_INTERVAL_REQ`        | 30ms        |
+
+The following configurations can also be set withint `docker-compose.yml`.
