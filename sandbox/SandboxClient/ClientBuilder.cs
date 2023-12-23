@@ -15,7 +15,7 @@ public class ClientBuilder
         return this;
     }
 
-    public ClientBuilder ParseRequest()
+    public ClientBuilder Parse()
     {
         return this;
     }

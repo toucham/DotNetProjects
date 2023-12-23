@@ -25,7 +25,7 @@ The client is just a console app that takes a JSON file as an input that can sim
 - Parallel `n` requests
 - Sequential `n` requests
 
-### Input File
+### Mock Requests Format
 
 The JSON file has the following structure:
 
@@ -45,10 +45,9 @@ The JSON file has the following structure:
         },
         ///...
     ],
-    "order": [ // sends the following requests sequentially
-        "1",
+    "timeline": [ // sends the following requests sequentially
+        "1", // sends one request
         ["2", "2", "2"], // this sends the identified requests in parallel
-        "3",
         { // same as above but more compact syntax
             "id": "2",
             "num": 3,
