@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxClient", "SandboxCli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxServer", "SandboxServer\SandboxServer.csproj", "{29F639A2-5E5E-4CFE-B119-51FA26D6E572}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxClient.Test", "SandboxClient.Test\SandboxClient.Test.csproj", "{61C81713-9C16-4E8F-A572-571D74BB456C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{29F639A2-5E5E-4CFE-B119-51FA26D6E572}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29F639A2-5E5E-4CFE-B119-51FA26D6E572}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29F639A2-5E5E-4CFE-B119-51FA26D6E572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C81713-9C16-4E8F-A572-571D74BB456C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C81713-9C16-4E8F-A572-571D74BB456C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C81713-9C16-4E8F-A572-571D74BB456C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C81713-9C16-4E8F-A572-571D74BB456C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

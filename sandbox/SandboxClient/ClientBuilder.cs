@@ -2,21 +2,26 @@ namespace SandboxClient;
 
 public class ClientBuilder
 {
-    private string _filename = "input.json";
+    private string _requestFile = "requests_input.json";
+    private string _timelineFile = "timeline_input.json";
 
     private Client _client = new();
 
-    public ClientBuilder AddFileName(string filename)
+    public ClientBuilder AddRequestFile(string filename)
     {
         if (!string.IsNullOrEmpty(filename))
         {
-            _filename = filename;
+            _requestFile = filename;
         }
         return this;
     }
 
-    public ClientBuilder Parse()
+    public ClientBuilder AddTimelineFile(string filename)
     {
+        if (!string.IsNullOrEmpty(filename))
+        {
+            _timelineFile = filename;
+        }
         return this;
     }
 

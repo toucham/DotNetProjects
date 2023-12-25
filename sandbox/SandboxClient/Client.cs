@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using SandboxClient.Model;
 
@@ -6,9 +5,9 @@ namespace SandboxClient;
 
 public class Client
 {
-    public Dictionary<string, ParsedInputFile> Requests = new();
+    public Dictionary<string, FakeRequest> Requests = new();
 
-    public IEnumerable<IEnumerable<string>> Timeline = new List<List<string>>();
+    public List<FakeEvent> Events = new();
 
     public void Start() { }
 }
