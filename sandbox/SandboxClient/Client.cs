@@ -10,16 +10,17 @@ public class Client
     private string _baseUrl;
     private HttpClient _client;
     private ILogger<Client> _logger;
-    public Dictionary<string, FakeRequest> Requests;
+    private Dictionary<string, FakeRequest> _requests;
+    private IList<FakeEvent> _events;
 
-    public IList<FakeEvent> Events;
-
-    public Client()
+    public Client(
+        SocketsHttpHandler httpHandler,
+        Dictionary<string, FakeRequest> requests,
+        IList<FakeEvent> events
+    )
     {
-        Requests = new();
-        Events = new List<FakeEvent>();
         // setup http client
-        _client = new HttpClient();
+        _client = new HttpClient(httpHandler);
 
         // setup logging
         using var factory = LoggerFactory.Create(static builder =>
@@ -33,7 +34,14 @@ public class Client
                 .AddConsole();
         });
         _logger = factory.CreateLogger<Client>();
+
+        // instantiante requests and events
+        _requests = requests;
+        _events = events;
     }
 
-    public void Start() { }
+    public void Start()
+    {
+        using (_logger.BeginScope("Starting Events")) { }
+    }
 }

@@ -4,6 +4,7 @@ public class WebServerConfig
 {
     public string Url = "localhost";
     public string Port = "8080";
+    public int MaxConcurrentRequests = 8;
 }
 
 public class Config

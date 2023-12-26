@@ -4,7 +4,7 @@ using SandboxClient.Model;
 namespace SandboxClient.Test;
 
 [TestFixture]
-public class FakeEventJsonConverterTest
+public class FakeEventJsonTest
 {
     public static string[] JsonToSingleEventCases =
     [
@@ -60,9 +60,6 @@ public class FakeEventJsonConverterTest
         ]
     ]
     """;
-
-    [SetUp]
-    public void Setup() { }
 
     [TestCaseSource(nameof(JsonToSingleEventCases))]
     public void SupportedTypesJson_ToSingleEvent_ShouldConvert(string json)

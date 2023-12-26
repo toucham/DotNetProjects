@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SandboxClient.Model;
 
-namespace SandboxClient;
+namespace SandboxClient.Json;
 
 public class FakeEventJsonConverter : JsonConverter
 {

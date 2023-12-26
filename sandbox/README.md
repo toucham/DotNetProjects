@@ -38,8 +38,18 @@ The request file defines the request that are going to be sent to the http serve
  [
      {
        "id": "string",
-       "url": "string",
        "method": "string",
+       "header": {
+           // ...
+       },
+       "body": {
+           // ...
+       }
+     },
+     {
+       "id": "string",
+       "method": "string",
+       "url": "string", // if URL is not set, then it will send to default URL that is configured in appsettings.json
        "header": {
            // ...
        },
