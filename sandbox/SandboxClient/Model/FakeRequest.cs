@@ -29,7 +29,7 @@ public class FakeRequest
 
 public static class FakeRequestExt
 {
-    public static HttpRequestMessage Convert(this FakeRequest fakeReq, Config config)
+    public static HttpRequestMessage Convert(this FakeRequest fakeReq, string baseUrl)
     {
         // http method
         var method = HttpMethod.Get;
@@ -74,7 +74,7 @@ public static class FakeRequestExt
         var req = new HttpRequestMessage()
         {
             Method = method,
-            RequestUri = new Uri(fakeReq.Url ?? config.WebServer.Url),
+            RequestUri = new Uri(fakeReq.Url ?? baseUrl),
             Content = content,
         };
         foreach (var (k, v) in fakeReq.Header)

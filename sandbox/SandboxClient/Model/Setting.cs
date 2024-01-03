@@ -1,15 +1,15 @@
 namespace SandboxClient.Model;
 
-public class WebServerConfig
+public class WebServerSetting
 {
     public string Url = "localhost";
     public string Port = "8080";
     public int MaxConcurrentRequests = 8;
 }
 
-public class Config
+public class Setting
 {
     public string RequestFile = "requestFile.json";
     public string TimelineFile = "timelineFile.json";
-    public WebServerConfig WebServer = new();
+    public WebServerSetting WebServer = new();
 }

@@ -11,17 +11,19 @@ public class ClientBuilder
 {
     private string _requestFile = "";
     private string _eventsFile = "";
+    private Setting _setting = new();
     private SocketsHttpHandler _httpHandler = new();
 
-    public ClientBuilder AddConfig(Config config)
+    public ClientBuilder AddSetting(Setting setting)
     {
+        _setting = setting;
         #region Client config
-        _requestFile = config.RequestFile;
-        _eventsFile = config.TimelineFile;
+        _requestFile = setting.RequestFile;
+        _eventsFile = setting.TimelineFile;
         #endregion
 
         #region Web Server config
-        _httpHandler.MaxConnectionsPerServer = config.WebServer.MaxConcurrentRequests;
+        _httpHandler.MaxConnectionsPerServer = setting.WebServer.MaxConcurrentRequests;
         #endregion
 
         return this;
@@ -31,7 +33,7 @@ public class ClientBuilder
     {
         var requests = BuildFakeRequests();
         var events = BuildFakeEvents();
-        var client = new Client(_httpHandler, requests, events);
+        var client = new Client(_httpHandler, requests, events, _setting.WebServer);
         return client;
     }
 

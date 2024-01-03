@@ -26,14 +26,14 @@ class Program
 
         // instantiate config
         var configRoot = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        var config = configRoot.GetRequiredSection("Configuration").Get<Config>();
+        var config = configRoot.GetRequiredSection("Setting").Get<Setting>();
         if (config == null)
         {
-            throw new Exception("config file not found");
+            throw new Exception("setting not found");
         }
 
         // setup the client to start simulating events
-        var client = new ClientBuilder().AddConfig(config).Build();
+        var client = new ClientBuilder().AddSetting(config).Build();
 
         // start sending
         client.Start();
