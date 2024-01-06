@@ -9,18 +9,12 @@ namespace SandboxClient;
 
 public class ClientBuilder
 {
-    private string _requestFile = "";
-    private string _eventsFile = "";
     private Setting _setting = new();
-    private SocketsHttpHandler _httpHandler = new();
+    private readonly SocketsHttpHandler _httpHandler = new();
 
     public ClientBuilder AddSetting(Setting setting)
     {
         _setting = setting;
-        #region Client config
-        _requestFile = setting.RequestFile;
-        _eventsFile = setting.TimelineFile;
-        #endregion
 
         #region Web Server config
         _httpHandler.MaxConnectionsPerServer = setting.WebServer.MaxConcurrentRequests;
@@ -40,7 +34,7 @@ public class ClientBuilder
     private Dictionary<string, FakeRequest> BuildFakeRequests()
     {
         var requests = new Dictionary<string, FakeRequest>();
-        var reqJsonData = File.ReadAllText(_requestFile);
+        var reqJsonData = File.ReadAllText(_setting.RequestFile);
         var reqs = JsonConvert.DeserializeObject<List<FakeRequest>>(reqJsonData);
         if (reqs == null)
         {
@@ -52,7 +46,7 @@ public class ClientBuilder
 
     private IList<FakeEvent> BuildFakeEvents()
     {
-        var jsonEventData = File.ReadAllText(_eventsFile);
+        var jsonEventData = File.ReadAllText(_setting.TimelineFile);
         var events = JsonConvert.DeserializeObject<IList<FakeEvent>>(jsonEventData);
         if (events == null)
             throw new Exception("Unable to deserialize Events");
