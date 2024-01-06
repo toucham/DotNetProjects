@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -15,6 +16,7 @@ public class Client
     private Dictionary<string, FakeRequest> _requests;
     private IList<FakeEvent> _events;
     private readonly WebServerSetting _setting;
+    private ConcurrentQueue<string> _queueResponse;
 
     public Client(
         SocketsHttpHandler httpHandler,
@@ -23,9 +25,9 @@ public class Client
         WebServerSetting setting
     )
     {
-        // setup http client
         _setting = setting;
         _client = new HttpClient(httpHandler);
+        _queueResponse = new();
 
         // setup logging
         using var factory = LoggerFactory.Create(static builder =>

@@ -40,8 +40,6 @@ public class FakeEventJsonTest
         """,
     ];
 
-    public static string[] JsonToParallelCases = [];
-
     private static string JsonEventCase = """
     [
         "normal_request",
@@ -114,9 +112,6 @@ public class FakeEventJsonTest
             Assert.That(fakeEvent[3].Ids, Has.Count.EqualTo(4));
         });
     }
-
-    [TestCaseSource(nameof(JsonToParallelCases))]
-    public void SupportedTypesJson_ToParallelEvent_ShouldConvert(string json) { }
 
     [Test]
     public void NonSupportTypesJson_ShouldThrowException()

@@ -5,6 +5,8 @@
   - [Client](#client)
     - [Start()](#start)
     - [HttpClient](#httpclient)
+  - [LogFileWorker](#logfileworker)
+    - [Worker Services](#worker-services)
 
 ## ClientBuilder
 
@@ -54,3 +56,9 @@ When you call an asynchronous operation on `HttpClient`, such as `SendAsync`, it
 3. The OS makes the network call, while the .NET runtime is free to perform other tasks.
 4. Once the network call is completed, the OS informs the .NET runtime.
 5. A completion port thread (from the ThreadPool) runs the continuation of the Task (the code after the await).
+
+## LogFileWorker
+
+For logging the responses from the request being sent. It is a worker service that is being run in the background. It opens a `StreamWriter` and keep the socket open until the client finishes sending all the requests.
+
+### Worker Services

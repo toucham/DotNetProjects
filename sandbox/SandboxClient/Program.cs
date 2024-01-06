@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System;
-using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SandboxClient.Model;
@@ -9,7 +9,7 @@ namespace SandboxClient;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         // instantiate logger
         using var factory = LoggerFactory.Create(static builder =>
@@ -29,13 +29,13 @@ class Program
         var config = configRoot.GetRequiredSection("Setting").Get<Setting>();
         if (config == null)
         {
-            throw new Exception("setting not found");
+            throw new Exception("Setting not found");
         }
 
         // setup the client to start simulating events
         var client = new ClientBuilder().AddSetting(config).Build();
 
         // start sending
-        client.Start();
+        await client.Start();
     }
 }
