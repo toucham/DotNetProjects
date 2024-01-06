@@ -10,7 +10,6 @@ namespace SandboxClient;
 
 public class Client
 {
-    private string _baseUrl;
     private HttpClient _client;
     private ILogger<Client> _logger;
     private Dictionary<string, FakeRequest> _requests;
@@ -104,13 +103,16 @@ public class Client
     )
     {
         List<Task<HttpResponseMessage>> allTasks = new();
-        _logger.LogInformation($"Sending parallel requests: {fakeRequests.Count()} requests");
-        foreach (var fakeReq in fakeRequests)
+        using (_logger.BeginScope($"Sending parallel requests: {fakeRequests.Count()} requests"))
         {
-            allTasks.Add(SendAsyncRequest(fakeReq));
+            foreach (var fakeReq in fakeRequests)
+            {
+                allTasks.Add(SendAsyncRequest(fakeReq));
+            }
+            var responses = await Task.WhenAll(allTasks);
+            _logger.LogInformation("Parallel requests are all sent");
+            return responses;
         }
-        var responses = await Task.WhenAll(allTasks);
-        return responses;
     }
 
     private async Task<HttpResponseMessage> SendAsyncRequest(FakeRequest fakeReq)
@@ -118,7 +120,6 @@ public class Client
         var req = fakeReq.Convert(_setting.Url);
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Url}\""))
         {
-            _logger.LogInformation($"Sending request of id {fakeReq.Id} to {fakeReq.Url}");
             var response = await _client.SendAsync(req);
             if (response.IsSuccessStatusCode)
             {
