@@ -1,12 +1,18 @@
 # SandboxClient
 
 - [SandboxClient](#sandboxclient)
+  - [Architecture](#architecture)
   - [ClientBuilder](#clientbuilder)
   - [Client](#client)
     - [Start()](#start)
     - [HttpClient](#httpclient)
   - [LogFileWorker](#logfileworker)
     - [Worker Services](#worker-services)
+
+## Architecture
+
+These are the building blocks of the sandbox client.
+![architecture](soft_arch.png)
 
 ## ClientBuilder
 

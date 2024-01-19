@@ -32,7 +32,9 @@ There are two types of input files that are required to simulate sending http re
 1. Requests JSON file
 2. Timeline JSON file
 
-The request file defines the request that are going to be sent to the http server. It has the following file structure: 
+#### Requests JSON
+
+The request file defines the request that are going to be sent to the http server. It has the following file structure:
 
 ```json
  [
@@ -61,7 +63,9 @@ The request file defines the request that are going to be sent to the http serve
  ]
 ```
 
-The second JSON file that is required is the timeline file that defines the events that are happening during the simulation. It defines which and when the requests are being sent over to the designated web server.It has the following structure:
+#### Timeline JSON
+
+The second JSON file that is required is the **timeline** file that defines the events that are happening during the simulation. It defines which and when the requests are being sent over to the designated web server.It has the following structure:
 
 ```json
  [ // sends the following requests sequentially
