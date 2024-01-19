@@ -32,13 +32,7 @@ public class Client
         // setup logging
         using var factory = LoggerFactory.Create(static builder =>
         {
-            builder
-                .AddFilter("Microsft", LogLevel.Warning)
-                .AddFilter("System", LogLevel.Warning)
-                .AddFilter("SandboxClient.Client", LogLevel.Information)
-                .AddFilter("SandboxClient.Client", LogLevel.Debug)
-                .AddFilter("SandboxClient.Client", LogLevel.Error)
-                .AddConsole();
+            builder.AddConsole();
         });
         _logger = factory.CreateLogger<Client>();
 

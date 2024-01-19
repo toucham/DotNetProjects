@@ -14,13 +14,7 @@ class Program
         // instantiate logger
         using var factory = LoggerFactory.Create(static builder =>
         {
-            builder
-                .AddFilter("Microsft", LogLevel.Warning)
-                .AddFilter("System", LogLevel.Warning)
-                .AddFilter("SandboxClient.Program", LogLevel.Information)
-                .AddFilter("SandboxClient.Program", LogLevel.Debug)
-                .AddFilter("SandboxClient.Program", LogLevel.Error)
-                .AddConsole();
+            builder.AddConsole();
         });
         var logger = factory.CreateLogger<Program>();
 
@@ -34,6 +28,7 @@ class Program
 
         // setup the client to start simulating events
         var client = new ClientBuilder().AddSetting(config).Build();
+        if (client == null) throw new Exception("client is null");
 
         // start sending
         await client.Start();

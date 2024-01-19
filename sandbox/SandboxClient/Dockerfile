@@ -3,7 +3,7 @@ WORKDIR /source
 
 # copy csproj and restore as distinct layers
 COPY *.sln .
-COPY *.csproj ./SandboxServer/
+COPY *.csproj ./SandboxClient/
 RUN dotnet restore
 
 # Copy everything

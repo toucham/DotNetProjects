@@ -1,0 +1,31 @@
+[
+    {
+        "id": "1",
+        "method": "GET",
+        "url": "localhost:8080/log"
+    },
+    {
+        "id": "2",
+        "method": "GET",
+        "url": "localhost:8080/log?param=true"
+    },
+    {
+        "id": "3",
+        "method": "POST",
+        "url": "localhost:8080/log",
+        "body": {
+            "logging": true
+        }
+    },
+    {
+        "id": "4",
+        "method": "DELETE",
+        "url": "localhost:8080/log"
+    },
+    {
+        "id": "5",
+        "method": "POST",
+        "url": "localhost:8080/log",
+        "body": "hello this is a message"
+    }
+]

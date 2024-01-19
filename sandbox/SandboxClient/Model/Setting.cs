@@ -9,7 +9,7 @@ public class WebServerSetting
 
 public class Setting
 {
-    public string RequestFile = "requestFile.json";
-    public string TimelineFile = "timelineFile.json";
+    public string RequestsFile = "requestFile.json";
+    public string EventsFile = "eventFile.json";
     public WebServerSetting WebServer = new();
 }

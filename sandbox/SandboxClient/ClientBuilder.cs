@@ -19,13 +19,7 @@ public class ClientBuilder
     {
         using var factory = LoggerFactory.Create(static builder =>
         {
-            builder
-                .AddFilter("Microsft", LogLevel.Warning)
-                .AddFilter("System", LogLevel.Warning)
-                .AddFilter("SandboxClient.ClientBuilder", LogLevel.Information)
-                .AddFilter("SandboxClient.ClientBuilder", LogLevel.Debug)
-                .AddFilter("SandboxClient.ClientBuilder", LogLevel.Error)
-                .AddConsole();
+            builder.AddConsole();
         });
         _logger = factory.CreateLogger<ClientBuilder>();
     }
@@ -35,23 +29,22 @@ public class ClientBuilder
         _setting = setting;
 
         // set the maximum number of worker and completion port threads + socket connections
-        var maxConnect = setting.WebServer.MaxConcurrentRequests;
+        var wantMaxConnect = setting.WebServer.MaxConcurrentRequests;
         ThreadPool.GetMaxThreads(out var workerThreads, out var completionPortThreads);
-        var minThread =
-            workerThreads > completionPortThreads ? completionPortThreads : workerThreads;
-        if (maxConnect > minThread)
+        _logger.LogInformation($"Get max threads: (worker threads: {workerThreads}, i/o port threads: {completionPortThreads})");
+        var currentThreads = workerThreads + completionPortThreads;
+        if (wantMaxConnect > currentThreads)
         {
             _logger.LogWarning(
-                $"The set number of threads exceed the number of minimal threads ({minThread})"
+                $"Need more threads to run simulation: ({currentThreads})"
             );
-            maxConnect = minThread;
+            if (!ThreadPool.SetMaxThreads(wantMaxConnect, wantMaxConnect))
+            {
+                throw new Exception("Unable to set maximum threads to run the client");
+            }
         }
 
-        if (!ThreadPool.SetMaxThreads(maxConnect, maxConnect))
-        {
-            throw new Exception("Unable to set maximum threads");
-        }
-        _httpHandler.MaxConnectionsPerServer = maxConnect;
+        _httpHandler.MaxConnectionsPerServer = wantMaxConnect;
 
         return this;
     }
@@ -67,7 +60,7 @@ public class ClientBuilder
     private Dictionary<string, FakeRequest> BuildFakeRequests()
     {
         var requests = new Dictionary<string, FakeRequest>();
-        var reqJson = File.ReadAllText(_setting.RequestFile);
+        var reqJson = File.ReadAllText(_setting.RequestsFile);
         var reqs = JsonConvert.DeserializeObject<List<FakeRequest>>(reqJson);
         if (reqs == null || reqs.Count == 0)
         {
@@ -79,7 +72,7 @@ public class ClientBuilder
 
     private IList<FakeEvent> BuildFakeEvents()
     {
-        var eventJson = File.ReadAllText(_setting.TimelineFile);
+        var eventJson = File.ReadAllText(_setting.EventsFile);
         var events = JsonConvert.DeserializeObject<IList<FakeEvent>>(eventJson);
         if (events == null)
             throw new Exception("Unable to deserialize Events");
