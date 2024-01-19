@@ -14,7 +14,7 @@ public class KeepAsJsonConverter : JsonConverter
         JsonSerializer serializer
     )
     {
-        return reader.TokenType == JsonToken.Null ? null : reader.Value.ToString();
+        return reader.TokenType == JsonToken.Null ? null : reader.Value?.ToString();
     }
 
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

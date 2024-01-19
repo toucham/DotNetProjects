@@ -49,7 +49,7 @@ public class Client
 
     public async Task Start()
     {
-        using (_logger.BeginScope("Starting Events"))
+        using (_logger.BeginScope("Starting clients..."))
         {
             foreach (var fakeEvent in _events)
             {

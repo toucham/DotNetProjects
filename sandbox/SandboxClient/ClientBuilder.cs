@@ -67,9 +67,9 @@ public class ClientBuilder
     private Dictionary<string, FakeRequest> BuildFakeRequests()
     {
         var requests = new Dictionary<string, FakeRequest>();
-        var reqJsonData = File.ReadAllText(_setting.RequestFile);
-        var reqs = JsonConvert.DeserializeObject<List<FakeRequest>>(reqJsonData);
-        if (reqs == null)
+        var reqJson = File.ReadAllText(_setting.RequestFile);
+        var reqs = JsonConvert.DeserializeObject<List<FakeRequest>>(reqJson);
+        if (reqs == null || reqs.Count == 0)
         {
             throw new Exception("Unable to deserialize Requests");
         }
@@ -79,8 +79,8 @@ public class ClientBuilder
 
     private IList<FakeEvent> BuildFakeEvents()
     {
-        var jsonEventData = File.ReadAllText(_setting.TimelineFile);
-        var events = JsonConvert.DeserializeObject<IList<FakeEvent>>(jsonEventData);
+        var eventJson = File.ReadAllText(_setting.TimelineFile);
+        var events = JsonConvert.DeserializeObject<IList<FakeEvent>>(eventJson);
         if (events == null)
             throw new Exception("Unable to deserialize Events");
         return events;
