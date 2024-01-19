@@ -1,12 +1,22 @@
-# SandboxClient
+<h1>SandboxClient</h1>
 
-- [SandboxClient](#sandboxclient)
-  - [Architecture](#architecture)
-  - [ClientBuilder](#clientbuilder)
-  - [Client](#client)
-    - [Start()](#start)
-    - [HttpClient](#httpclient)
+The Sandbox Client is a console app that takes a JSON file as an input that can simulate various different of scenarios of incoming requests:
+
+- A single request
+- Parallel `n` requests
+- Sequential `n` requests
+
+<h2>Table of Contents</h2>
+
+- [Architecture](#architecture)
+- [ClientBuilder](#clientbuilder)
+  - [FakeRequest](#fakerequest)
+  - [FakeEvent](#fakeevent)
+- [Client](#client)
+  - [Start()](#start)
+  - [HttpClient](#httpclient)
   - [LogFileWorker](#logfileworker)
+    - [Concurrent Queue](#concurrent-queue)
     - [Worker Services](#worker-services)
 
 ## Architecture
@@ -15,6 +25,77 @@ These are the building blocks of the sandbox client.
 ![architecture](soft_arch.png)
 
 ## ClientBuilder
+
+The `ClientBuilder` prepare the necessary components to create a `Client` so that it can go through the `FakeEvent` that was created from parsing the event json file (default value at `events.json`).
+
+There are two types of input files that are required to set up the `Client`:
+
+1. Requests JSON file
+2. Events JSON file
+
+### FakeRequest
+
+The `FakeRequest` is instantiated from parsing the requests JSON file that is defined by the user. The request file defines the request that are going to be sent to the http server. It has the following file structure:
+
+```json
+ [
+     {
+       "id": "string",
+       "method": "string",
+       "header": {
+           // ...
+       },
+       "body": {
+           // ...
+       }
+     },
+     {
+       "id": "string",
+       "method": "string",
+       "url": "string", // if URL is not set, then it will send to default URL that is configured in appsettings.json
+       "header": {
+           // ...
+       },
+       "body": {
+           // ...
+       }
+     },
+     ///...
+ ]
+```
+
+### FakeEvent
+
+The second JSON file that is required is the **events** file that defines the events that are happening during the simulation. It instantiates the `FakeEvent` class.
+
+It defines which and when the requests are being sent over to the designated web server.It has the following structure:
+
+```json
+ [ // sends the following requests sequentially
+     "1", // sends one request
+     ["2", "2", "2"], // this sends the identified requests in parallel
+     { // same as above but more compact syntax
+         "id": "2",
+         "amount": 3,
+     },
+     [ // same all the requests within the array in parallel
+         {
+             "id": "1",
+             "amount": 2
+         },
+         "2",
+         "3"
+     ]
+ ]
+```
+
+These are the following rules that must be followed within the events input JSON file:
+
+1. There are altogether three types of elements: `string`, `array`, and an `object`.
+2. The `string` represents the ID of the request defined in the request input JSON file.
+3. Each element in the outer array represents event and is executed sequentially in order. So in the example above, the request with id `"1"` will be sent first.
+4. A nested `array` represents a parallel event such that the requests within that array will be sent to the web server in parallel.
+5. The `object` represents one request that will be sent in parallel with the defined amount of that request that will be sent.
 
 ## Client
 
@@ -63,8 +144,10 @@ When you call an asynchronous operation on `HttpClient`, such as `SendAsync`, it
 4. Once the network call is completed, the OS informs the .NET runtime.
 5. A completion port thread (from the ThreadPool) runs the continuation of the Task (the code after the await).
 
-## LogFileWorker
+### LogFileWorker
 
 For logging the responses from the request being sent. It is a worker service that is being run in the background. It opens a `StreamWriter` and keep the socket open until the client finishes sending all the requests.
 
-### Worker Services
+#### Concurrent Queue
+
+#### Worker Services
