@@ -36,14 +36,13 @@ public class ClientBuilder
         if (wantMaxConnect > currentThreads)
         {
             _logger.LogWarning(
-                $"Need more threads to run simulation: ({currentThreads})"
+                $"Need more threads to run the simulation: ({currentThreads})"
             );
             if (!ThreadPool.SetMaxThreads(wantMaxConnect, wantMaxConnect))
             {
                 throw new Exception("Unable to set maximum threads to run the client");
             }
         }
-
         _httpHandler.MaxConnectionsPerServer = wantMaxConnect;
 
         return this;
