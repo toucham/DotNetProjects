@@ -16,13 +16,15 @@ public class Client
     private Dictionary<string, FakeRequest> _requests;
     private IList<FakeEvent> _events;
     private readonly WebServerSetting _setting;
+    private readonly FakeRequestOptions? _fakeRequestOpt;
     private ConcurrentQueue<string> _queueResponse;
 
     public Client(
         SocketsHttpHandler httpHandler,
         Dictionary<string, FakeRequest> requests,
         IList<FakeEvent> events,
-        WebServerSetting setting
+        WebServerSetting setting,
+        FakeRequestOptions? fakeReqOpt
     )
     {
         _setting = setting;
@@ -39,6 +41,7 @@ public class Client
         // instantiante requests and events
         _requests = requests;
         _events = events;
+        _fakeRequestOpt = fakeReqOpt;
     }
 
     public async Task Start()
@@ -80,7 +83,7 @@ public class Client
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
             _logger.LogInformation($"Sending a single request of id {fakeReq.Id} to \"{_setting.BaseUrl}/{fakeReq.Path}\"");
-            var req = fakeReq.Convert(_setting);
+            var req = fakeReq.Convert(_setting, _fakeRequestOpt);
             var res = _client.Send(req);
             if (res.IsSuccessStatusCode)
             {
@@ -113,7 +116,7 @@ public class Client
 
     private async Task<HttpResponseMessage> SendAsyncRequest(FakeRequest fakeReq)
     {
-        var req = fakeReq.Convert(_setting);
+        var req = fakeReq.Convert(_setting, _fakeRequestOpt);
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
             var response = await _client.SendAsync(req);

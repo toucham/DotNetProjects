@@ -6,6 +6,25 @@ using SandboxClient.Json;
 
 namespace SandboxClient.Model;
 
+public class FakeRequestJson
+{
+    [JsonProperty("options")]
+    public FakeRequestOptions? Options { get; set; } = null;
+
+    [JsonProperty("requests")]
+    public List<FakeRequest> Requests { get; set; } = new();
+}
+
+public class FakeRequestOptions
+{
+    [JsonProperty("basePath")]
+    public string? BasePath { get; set; } = null;
+
+    [JsonProperty("defaultBody")]
+    public JToken? DefaultBody { get; set; } = null;
+
+}
+
 public class FakeRequest
 {
     [JsonProperty("id")]
@@ -26,6 +45,7 @@ public class FakeRequest
     public string Path
     {
         get => _path.Trim('/');
+        set => _path = value;
     }
 
     public Uri BuildUri(string baseUri, int? port)

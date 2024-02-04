@@ -1,31 +1,42 @@
-[
-    {
-        "id": "1",
-        "method": "GET",
-        "path": "/log"
+{
+    "option": {
+        "basePath": "/api/message",
+        "defaultBody": "hello this is a message"
     },
-    {
-        "id": "2",
-        "method": "GET",
-        "path": "/log?param=true"
-    },
-    {
-        "id": "3",
-        "method": "POST",
-        "path": "/log",
-        "body": {
-            "logging": true
+    "requests": [
+        {
+            "id": "1",
+            "method": "POST",
+            "path": "Post",
+            "body": "hello this is a message"
+        },
+        {
+            "id": "2",
+            "method": "POST",
+            "path": "PostJson",
+            "body": {
+                "body": "one more message"
+            }
+        },
+        {
+            "id": "3",
+            "method": "GET",
+            "path": "Get?index=1"
+        },
+        {
+            "id": "4",
+            "method": "GET",
+            "path": "Get?index=2"
+        },
+        {
+            "id": "5",
+            "method": "DELETE",
+            "path": "/Delete?index=1"
+        },
+        {
+            "id": "6",
+            "method": "GET",
+            "path": "GetAll"
         }
-    },
-    {
-        "id": "4",
-        "method": "DELETE",
-        "path": "/log"
-    },
-    {
-        "id": "5",
-        "method": "POST",
-        "path": "/log",
-        "body": "hello this is a message"
-    }
-]
+    ]
+}

@@ -16,7 +16,7 @@ public class MessageController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> PostMessage()
+    public async Task<ActionResult> Post()
     {
         using StreamReader reader = new(Request.Body, false);
         var body = await reader.ReadToEndAsync();
@@ -30,7 +30,7 @@ public class MessageController : ControllerBase
 
     [HttpPost]
     [Consumes("application/json")]
-    public ActionResult PostMessageJson([FromBody] Message msg)
+    public ActionResult PostJson([FromBody] Message msg)
     {
         _messageService.Add(msg);
         return Ok();
@@ -38,7 +38,7 @@ public class MessageController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public ActionResult<Message> GetMessage([FromQuery] int? index)
+    public ActionResult<Message> Get([FromQuery] int? index)
     {
         if (index == null)
         {
@@ -52,15 +52,19 @@ public class MessageController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IList<Message>> GetMessages()
+    public ActionResult<IList<Message>> GetAll()
     {
         return _messageService.GetAll().ToList();
     }
 
     [HttpDelete]
-    public ActionResult<Message> DeleteMsg([FromBody] int index)
+    public ActionResult<Message> Delete([FromQuery] int? index)
     {
-        var msg = _messageService.Remove(index);
+        if (index == null)
+        {
+            return new ContentResult { StatusCode = StatusCodes.Status400BadRequest, Content = "no index input" };
+        }
+        var msg = _messageService.Remove((int)index);
         if (msg == null)
         {
             return new ContentResult { StatusCode = StatusCodes.Status404NotFound, Content = "Invalid index" };

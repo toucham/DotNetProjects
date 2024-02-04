@@ -50,23 +50,29 @@ public class ClientBuilder
 
     public Client Build()
     {
-        var requests = BuildFakeRequests();
+        var (requests, options) = BuildFakeRequests();
         var events = BuildFakeEvents();
-        var client = new Client(_httpHandler, requests, events, _setting.WebServer);
+        var client = new Client(_httpHandler, requests, events, _setting.WebServer, options);
         return client;
     }
 
-    private Dictionary<string, FakeRequest> BuildFakeRequests()
+    private (Dictionary<string, FakeRequest>, FakeRequestOptions?) BuildFakeRequests()
     {
         var requests = new Dictionary<string, FakeRequest>();
         var reqJson = File.ReadAllText(_setting.RequestsFile);
-        var reqs = JsonConvert.DeserializeObject<List<FakeRequest>>(reqJson);
-        if (reqs == null || reqs.Count == 0)
+        var fakeReqs = JsonConvert.DeserializeObject<FakeRequestJson>(reqJson) ?? throw new Exception("DeserializeObject as null");
+
+        var reqs = fakeReqs.Requests;
+        if (reqs == null)
         {
             throw new Exception("Unable to deserialize Requests");
         }
+        else if (reqs.Count == 0)
+        {
+            throw new Exception("No fake requests in the list");
+        }
         reqs.ForEach((req) => requests.Add(req.Id, req));
-        return requests;
+        return (requests, fakeReqs.Options);
     }
 
     private IList<FakeEvent> BuildFakeEvents()
