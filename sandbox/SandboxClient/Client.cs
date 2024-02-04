@@ -77,10 +77,10 @@ public class Client
 
     private HttpResponseMessage SendSingleRequest(FakeRequest fakeReq)
     {
-        using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Url}\""))
+        using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
-            _logger.LogInformation($"Sending a single request of id {fakeReq.Id} to {fakeReq.Url}");
-            var req = fakeReq.Convert(_setting.Url);
+            _logger.LogInformation($"Sending a single request of id {fakeReq.Id} to \"{_setting.BaseUrl}/{fakeReq.Path}\"");
+            var req = fakeReq.Convert(_setting);
             var res = _client.Send(req);
             if (res.IsSuccessStatusCode)
             {
@@ -113,8 +113,8 @@ public class Client
 
     private async Task<HttpResponseMessage> SendAsyncRequest(FakeRequest fakeReq)
     {
-        var req = fakeReq.Convert(_setting.Url);
-        using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Url}\""))
+        var req = fakeReq.Convert(_setting);
+        using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
             var response = await _client.SendAsync(req);
             if (response.IsSuccessStatusCode)

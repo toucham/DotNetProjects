@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,11 +16,27 @@ public class FakeRequest
 
     [JsonProperty("header")]
     [JsonConverter(typeof(DictCaseInsensitiveJsonConverter))]
-    public required Dictionary<string, string> Header;
+    public Dictionary<string, string>? Header;
 
     [JsonProperty("body")]
-    public JObject? Body;
+    public JToken? Body;
 
-    [JsonProperty("url")]
-    public string? Url;
+    [JsonProperty("path")]
+    private string _path = "";
+    public string Path
+    {
+        get => _path.Trim('/');
+    }
+
+    public Uri BuildUri(string baseUri, int? port)
+    {
+        if (port != null)
+        {
+            return new UriBuilder("http", baseUri, (int)port, _path).Uri;
+        }
+        else
+        {
+            return new UriBuilder("http", baseUri, 80, _path).Uri;
+        }
+    }
 }

@@ -6,7 +6,7 @@ namespace SandboxClient.Model;
 
 public static class FakeRequestExt
 {
-    public static HttpRequestMessage Convert(this FakeRequest fakeReq, string baseUrl)
+    public static HttpRequestMessage Convert(this FakeRequest fakeReq, WebServerSetting setting)
     {
         // http method
         var method = HttpMethod.Get;
@@ -33,17 +33,21 @@ public static class FakeRequestExt
         var body = fakeReq.ToString();
         if ((method == HttpMethod.Post || method == HttpMethod.Put) && !string.IsNullOrEmpty(body))
         {
-            // content-type
-            fakeReq.Header.TryGetValue("content-type", out string? contentType);
-            contentType ??= "application/json";
-
-            // content-encoding
+            string? contentType = null;
             var encoding = Encoding.Default;
-            fakeReq.Header.TryGetValue("content-encoding", out string? contentEncoding);
-            if (contentEncoding != null)
+            if (fakeReq.Header != null)
             {
-                encoding = Encoding.GetEncoding(contentEncoding);
+                // content-type
+                fakeReq.Header.TryGetValue("content-type", out contentType);
+
+                // content-encoding
+                fakeReq.Header.TryGetValue("content-encoding", out string? contentEncoding);
+                if (contentEncoding != null)
+                {
+                    encoding = Encoding.GetEncoding(contentEncoding);
+                }
             }
+            contentType ??= "application/json";
             content = new StringContent(body, encoding, contentType);
         }
 
@@ -51,14 +55,17 @@ public static class FakeRequestExt
         var req = new HttpRequestMessage()
         {
             Method = method,
-            RequestUri = new Uri(fakeReq.Url ?? baseUrl),
+            RequestUri = fakeReq.BuildUri(setting.Url, setting.Port),
             Content = content,
         };
-        foreach (var (k, v) in fakeReq.Header)
+        if (fakeReq.Header != null)
         {
-            if (!k.StartsWith("content"))
+            foreach (var (k, v) in fakeReq.Header)
             {
-                req.Headers.Add(k, v);
+                if (!k.StartsWith("content"))
+                {
+                    req.Headers.Add(k, v);
+                }
             }
         }
         return req;
