@@ -51,6 +51,10 @@ public class ClientBuilder
     public Client Build()
     {
         var (requests, options) = BuildFakeRequests();
+        if (options != null)
+        {
+            _logger.LogInformation("FakeRequestOptions are applied...");
+        }
         var events = BuildFakeEvents();
         var client = new Client(_httpHandler, requests, events, _setting.WebServer, options);
         return client;

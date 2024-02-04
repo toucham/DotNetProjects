@@ -82,8 +82,8 @@ public class Client
     {
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
-            _logger.LogInformation($"Sending a single request of id {fakeReq.Id} to \"{_setting.BaseUrl}/{fakeReq.Path}\"");
             var req = fakeReq.Convert(_setting, _fakeRequestOpt);
+            _logger.LogInformation($"Sending a single request of id {fakeReq.Id} to \"{req.RequestUri?.ToString()}\"");
             var res = _client.Send(req);
             if (res.IsSuccessStatusCode)
             {
@@ -119,6 +119,7 @@ public class Client
         var req = fakeReq.Convert(_setting, _fakeRequestOpt);
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
+            _logger.LogInformation($"Sending async request of id {fakeReq.Id} to \"{req.RequestUri?.ToString()}\"");
             var response = await _client.SendAsync(req);
             if (response.IsSuccessStatusCode)
             {

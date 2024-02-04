@@ -1,5 +1,5 @@
 {
-    "option": {
+    "options": {
         "basePath": "/api/message",
         "defaultBody": "hello this is a message"
     },

@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using System.Text;
-using Newtonsoft.Json.Linq;
 
 namespace SandboxClient.Model;
 
@@ -32,7 +31,10 @@ public static class FakeRequestExt
         // http content
         HttpContent? content = null;
 
-        if (options != null) fakeReq.ApplyOption(options);
+        if (options != null)
+        {
+            fakeReq.ApplyOption(options);
+        }
 
         var body = fakeReq.Body?.ToString();
         if ((method == HttpMethod.Post || method == HttpMethod.Put) && !string.IsNullOrEmpty(body))
@@ -85,7 +87,11 @@ public static class FakeRequestExt
 
         // base path
         if (!string.IsNullOrEmpty(options.BasePath))
-            fakeRequest.Path = options.BasePath;
+        {
+            var basePath = options.BasePath.Trim('/');
+            fakeRequest.Path = string.Format("/{0}/{1}", basePath, fakeRequest.Path);
+        }
+
 
     }
 }
