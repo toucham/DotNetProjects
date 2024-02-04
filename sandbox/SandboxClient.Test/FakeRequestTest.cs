@@ -4,7 +4,7 @@ using SandboxClient.Model;
 namespace SandboxClient.Test;
 
 [TestFixture]
-public class FakeRequestJsonTest
+public class FakeRequestTest
 {
     private static string JsonMultiFakeRequestsCase = """
     [
