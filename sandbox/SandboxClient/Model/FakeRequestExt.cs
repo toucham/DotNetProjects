@@ -6,7 +6,7 @@ namespace SandboxClient.Model;
 
 public static class FakeRequestExt
 {
-    public static HttpRequestMessage Convert(this FakeRequest fakeReq, WebServerSetting setting, FakeRequestOptions? options)
+    public static HttpRequestMessage Convert(this FakeRequest fakeReq, WebServerSetting setting)
     {
         // http method
         var method = HttpMethod.Get;
@@ -30,11 +30,6 @@ public static class FakeRequestExt
 
         // http content
         HttpContent? content = null;
-
-        if (options != null)
-        {
-            fakeReq.ApplyOption(options);
-        }
 
         var body = fakeReq.Body?.ToString();
         if ((method == HttpMethod.Post || method == HttpMethod.Put) && !string.IsNullOrEmpty(body))
@@ -77,7 +72,7 @@ public static class FakeRequestExt
         return req;
     }
 
-    private static void ApplyOption(this FakeRequest fakeRequest, FakeRequestOptions options)
+    public static void Apply(this FakeRequestOptions options, FakeRequest fakeRequest)
     {
         // body
         if (string.IsNullOrEmpty(fakeRequest.Body?.ToString()))

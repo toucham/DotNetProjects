@@ -56,7 +56,7 @@ public class ClientBuilder
             _logger.LogInformation("FakeRequestOptions are applied...");
         }
         var events = BuildFakeEvents();
-        var client = new Client(_httpHandler, requests, events, _setting.WebServer, options);
+        var client = new Client(_httpHandler, requests, events, _setting.WebServer);
         return client;
     }
 
@@ -75,7 +75,12 @@ public class ClientBuilder
         {
             throw new Exception("No fake requests in the list");
         }
-        reqs.ForEach((req) => requests.Add(req.Id, req));
+        reqs.ForEach((req) =>
+        {
+            fakeReqs.Options?.Apply(req);
+            requests.Add(req.Id, req);
+        }
+            );
         return (requests, fakeReqs.Options);
     }
 

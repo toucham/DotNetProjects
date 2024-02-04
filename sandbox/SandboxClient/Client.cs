@@ -16,15 +16,13 @@ public class Client
     private Dictionary<string, FakeRequest> _requests;
     private IList<FakeEvent> _events;
     private readonly WebServerSetting _setting;
-    private readonly FakeRequestOptions? _fakeRequestOpt;
     private ConcurrentQueue<string> _queueResponse;
 
     public Client(
         SocketsHttpHandler httpHandler,
         Dictionary<string, FakeRequest> requests,
         IList<FakeEvent> events,
-        WebServerSetting setting,
-        FakeRequestOptions? fakeReqOpt
+        WebServerSetting setting
     )
     {
         _setting = setting;
@@ -41,7 +39,6 @@ public class Client
         // instantiante requests and events
         _requests = requests;
         _events = events;
-        _fakeRequestOpt = fakeReqOpt;
     }
 
     public async Task Start()
@@ -69,7 +66,7 @@ public class Client
                         await SendParallelRequest(fakeRequests);
                         break;
                     case EventType.Single:
-                        SendSingleRequest(fakeRequests.First());
+                        await SendSingleRequest(fakeRequests.First());
                         break;
                     default:
                         throw new Exception($"Unidentified EventType: {fakeEvent.EventType}");
@@ -78,20 +75,21 @@ public class Client
         }
     }
 
-    private HttpResponseMessage SendSingleRequest(FakeRequest fakeReq)
+    private async Task<HttpResponseMessage> SendSingleRequest(FakeRequest fakeReq)
     {
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
-            var req = fakeReq.Convert(_setting, _fakeRequestOpt);
+            var req = fakeReq.Convert(_setting);
             _logger.LogInformation($"Sending a single request of id {fakeReq.Id} to \"{req.RequestUri?.ToString()}\"");
             var res = _client.Send(req);
+            var content = await res.Content.ReadAsStringAsync();
             if (res.IsSuccessStatusCode)
             {
-                _logger.LogInformation("");
+                _logger.LogInformation($"Success: {content}");
             }
             else
             {
-                _logger.LogWarning("");
+                _logger.LogWarning($"Failed: {content}");
             }
             return res;
         }
@@ -116,20 +114,21 @@ public class Client
 
     private async Task<HttpResponseMessage> SendAsyncRequest(FakeRequest fakeReq)
     {
-        var req = fakeReq.Convert(_setting, _fakeRequestOpt);
+        var req = fakeReq.Convert(_setting);
         using (_logger.BeginScope($"ID: {fakeReq.Id} to \"{fakeReq.Path}\""))
         {
             _logger.LogInformation($"Sending async request of id {fakeReq.Id} to \"{req.RequestUri?.ToString()}\"");
-            var response = await _client.SendAsync(req);
-            if (response.IsSuccessStatusCode)
+            var res = await _client.SendAsync(req);
+            var content = await res.Content.ReadAsStringAsync();
+            if (res.IsSuccessStatusCode)
             {
-                _logger.LogInformation("");
+                _logger.LogInformation($"Success: {content}");
             }
             else
             {
-                _logger.LogWarning("");
+                _logger.LogWarning($"Failed: {content}");
             }
-            return response;
+            return res;
         }
     }
 }
